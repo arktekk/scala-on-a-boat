@@ -1,8 +1,12 @@
 package no.arktekk.scalaboat.formhandler
 import Utils._
+import collection.mutable.ListBuffer
 
 trait Listeners{
-  var onChange:()=>Unit = () => {}
+
+  val l = new ListBuffer[() => Unit]
+
+  def onChange(f: => Unit){ l+= f _}
 }
 
 abstract class Field[T](var value: Option[T], val p: Form) extends Listeners{
@@ -29,7 +33,6 @@ abstract class Field[T](var value: Option[T], val p: Form) extends Listeners{
   final def errorMessage = em.map(_._2)
 
   final def getValue: String = toString;
-
 
 }
 

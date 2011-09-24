@@ -5,6 +5,7 @@ import reflect.BeanProperty
 import java.util.{Properties, ArrayList, HashMap}
 import java.io.InputStreamReader
 
+
 abstract class Form {
   implicit val p:Form = this
 
@@ -76,7 +77,7 @@ abstract class Form {
       val field: Option[Field[_]] = fields.find(_.name.equals(c.field)).map(_.field)
       field.map(fld=>{
         fld.merge(c.value)
-        fld.onChange()
+        fld.l.foreach(_())
       })
     })
     subForms.foreach(sf => {

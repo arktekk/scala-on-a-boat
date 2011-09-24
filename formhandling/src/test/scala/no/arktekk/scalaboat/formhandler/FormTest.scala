@@ -1,12 +1,12 @@
 package no.arktekk.scalaboat.formhandler
 
-import org.scalatest.junit.AssertionsForJUnit
+import org.scalatest.junit.JUnitSuite
 import org.junit.Test
 import org.junit.Assert._
 import scala.Array
 import ErrorCodes._
 
-class FormTest extends AssertionsForJUnit {
+class FormTest extends JUnitSuite {
 
   @Test
   def shouldValidateRequiredField() {
@@ -14,7 +14,6 @@ class FormTest extends AssertionsForJUnit {
       val field1 = new StringField(None)
       val field2 = new StringField("Something")
     }
-
     val errors = Form.validate(){}
     assertEquals(1, errors.size)
     assertEquals(decodeErrorCode(required, "field1"), errors.getOrElse("field1", "expected error message not found"))
@@ -189,13 +188,17 @@ class FormTest extends AssertionsForJUnit {
       val field1 = new StringField("sub.field1 value")
       val sub = new SubSubForm
 
-      field1.onChange = () => sub.field1.value = Some("sub.sub.field1 and now even did I")
+      field1.onChange{
+        sub.field1.value = Some("sub.sub.field1 and now even did I")
+      }
     }
     class TestForm extends Form {
       val sub: SubForm = new SubForm
       val field1: StringField = new StringField("field1 value")
 
-      field1.onChange = () => sub.field1.value = Some("sub.field1 changed as well")
+      field1.onChange {
+        sub.field1.value = Some("sub.field1 changed as well")
+      }
     }
 
     val form = new TestForm
@@ -234,7 +237,7 @@ class FormTest extends AssertionsForJUnit {
       val field1 = new StringField("Something")
       val field2 = new StringField("Something else")
 
-      field1.onChange = () => {
+      field1.onChange {
         field2.value = field1.value
       }
     }
